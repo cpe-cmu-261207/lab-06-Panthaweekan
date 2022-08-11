@@ -43,7 +43,7 @@ export default function Home() {
           value={inputNum}
           onChange={(event) => setInputNum(event.target.value)}
         />
-        <button class="btn btn-dark" onClick={() => genUsers()}>
+        <button className="btn btn-dark" onClick={() => genUsers()}>
           Generate
         </button>
       </div>
