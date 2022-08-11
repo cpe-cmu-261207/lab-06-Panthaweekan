@@ -1,13 +1,29 @@
 import {
   IconChevronDown,
   IconChevronUp,
+  IconCurrencyDollarAustralian,
   IconMailForward,
   IconMapPins,
 } from "@tabler/icons";
 
+import { useState } from "react";
+import axios from "axios";
+import UserCard from "../components/UserCard";
+import UserCardDetail from "../components/UserCardDetail";
+
 export default function Home() {
+  const [inputNum, setInputNum] = useState(1);
+  const [data, setData] = useState([]);
   const genUsers = async () => {
-    const resp = await axios.get(`https://randomuser.me/api/`);
+    if (inputNum < 1) {
+      alert("Invalid number of user");
+      return;
+    }
+
+    const resp = await axios.get(
+      `https://randomuser.me/api/?results=${inputNum}`
+    );
+    setData(resp.data.results);
   };
 
   return (
@@ -24,55 +40,35 @@ export default function Home() {
           className="form-control text-center"
           style={{ maxWidth: "100px" }}
           type="number"
+          value={inputNum}
+          onChange={(event) => setInputNum(event.target.value)}
         />
         <button class="btn btn-dark" onClick={() => genUsers()}>
           Generate
         </button>
       </div>
 
-      {/* Example of folded UserCard */}
-      <div className="border-bottom">
-        {/* main section */}
-        <div className="d-flex align-items-center p-3">
-          <img
-            src="/profile-placeholder.jpeg"
-            width="90px"
-            class="rounded-circle me-4"
-          />
-          <span className="text-center display-6 me-auto">Name...</span>
-          <IconChevronDown />
-        </div>
+      {data.map((curdata) => (
+        <UserCard
+          key={curdata.login.sha256}
+          name={curdata.name.first + " " + curdata.name.last}
+          img={curdata.picture.large}
+          email={" " + curdata.email}
+          address={
+            " " +
+            curdata.location.city +
+            " " +
+            curdata.location.state +
+            " " +
+            curdata.location.country +
+            " " +
+            curdata.location.postcode
+          }
+        />
+      ))}
 
-        {/* UserCardDetail is hidden */}
-      </div>
-
-      {/* Example of expanded UserCard */}
-      <div className="border-bottom">
-        {/* main section */}
-        <div className="d-flex align-items-center p-3">
-          <img
-            src="/profile-placeholder.jpeg"
-            width="90px"
-            class="rounded-circle me-4"
-          />
-          <span className="text-center display-6 me-auto">Name...</span>
-          <IconChevronUp />
-        </div>
-
-        {/* UserCardDetail*/}
-        <div className="text-center">
-          <p>
-            <IconMailForward /> Email...
-          </p>
-          <p>
-            <IconMapPins /> Address...
-          </p>
-        </div>
-      </div>
-
-      {/* made by section */}
       <p className="text-center mt-3 text-muted fst-italic">
-        made by Chayanin Suatap 12345679
+        made by Panthaweekan Somngam 640612093
       </p>
     </div>
   );
